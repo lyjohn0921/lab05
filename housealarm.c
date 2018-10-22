@@ -1,6 +1,7 @@
 #include <wiringPi.h>
 #include <stdio.h>
 #include <time.h>
+#include "ifttt.h"
 
 void init_alarm();
 void toalarmoff();
@@ -28,30 +29,31 @@ void toalarmoff(){
   digitalWrite (1, HIGH) ;
   digitalWrite (2,  LOW) ;
   digitalWrite (4,  LOW) ;
-  while (digitalRead(3)){
-    toalarming();
-    return;
-  }
+  delay(5000);
+  while (digitalRead(3) == 1);
+  toalarming();
 }
 
 void toalarming(){
   time_t timestar;
-  timer = time(NULL);
-  while(difftime(timer,time(NULL)) < 10.00 ){
-    for (i=0;i<10;i++) {
+  timestar = time(NULL);
+  while(difftime(time(NULL), timestar) < 10.00 ){
+  
     digitalWrite (1, HIGH) ; delay (500) ;
     digitalWrite (1,  LOW) ; delay (500) ;
-  }
+    if(digitalRead(3) == 0){
+      toalarmoff();
+    }
+    }
     digitalWrite (2, HIGH) ;
     digitalWrite (1,  LOW) ;
-  }
   toalarmed();
 }
 void toalarmed() {
-  while (digitalRead(3) == 0){
-    
+  while (digitalRead(3) == 1){
+    while(digitalRead(0) == 0 && digitalRead(3));
     while(digitalRead(0) == 1){
-      totriffered();
+      totriggered();
       return;
     }
     
@@ -61,32 +63,35 @@ void toalarmed() {
 
 void totriggered(){
   time_t timestar;
-  timer = time(NULL);
-  while(difftime(timer,time(NULL)) < 10.00){
+  timestar = time(NULL);
+  while(difftime(time(NULL), timestar) < 10.00){
     
-    while(digitalRead(3) == 0){
-      digitalWrite (1, HIGH) ; 
-      digitalWrite (2, HIGH) ;
-      digitalWrite (1,  LOW) ;
-      digitalWrite (2,  LOW) ;
-      delay(2000);
+    digitalWrite (1, HIGH) ;delay(500);
+    digitalWrite (2, HIGH) ;delay(500);
+    digitalWrite (1,  LOW) ;delay(500);
+    digitalWrite (2,  LOW) ;delay(500);
+    
+    if ((digitalRead(3) == 0)) {
+      toalarmoff();
     }
-    toalarmoff();
-    return;
   }
   toalarmsounding();
 }
 
 void toalarmsounding(){
-  
-  while(digitalRead(3) == 0){
+  while(1){
+    if(digitalRead(3) == 0){
+      toalarmoff();
+    }
     digitalWrite (1, HIGH) ;
     digitalWrite (2, HIGH) ;
     digitalWrite (4, HIGH) ;
+    ifttt("https://maker.ifttt.com/trigger/alarm_triggered/with/key/dcZuaJf3oHEAyHhu-55bJE", "my1", "my 2", "my 33333");
     delay(2000);
     digitalWrite (1, LOW) ;
     digitalWrite (2, LOW) ;
     digitalWrite (4, LOW) ;
+    
   }
-  toalarmoff();
+  
 }
