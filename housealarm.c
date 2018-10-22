@@ -29,7 +29,7 @@ void toalarmoff(){
   digitalWrite (1, HIGH) ;
   digitalWrite (2,  LOW) ;
   digitalWrite (4,  LOW) ;
-  delay(5000);
+  delay(3000);
   while (digitalRead(3) == 1);
   toalarming();
 }
@@ -40,12 +40,22 @@ void toalarming(){
   while(difftime(time(NULL), timestar) < 10.00 ){
   
     digitalWrite (1, HIGH) ; delay (500) ;
+	if (digitalRead(3) == 0){
+	toalarmoff();  
+
+}
+
     digitalWrite (1,  LOW) ; delay (500) ;
     if(digitalRead(3) == 0){
       toalarmoff();
     }
     }
     digitalWrite (2, HIGH) ;
+	if (digitalRead(3) == 0){
+	toalarmoff();  
+
+}
+
     digitalWrite (1,  LOW) ;
   toalarmed();
 }
@@ -67,31 +77,44 @@ void totriggered(){
   while(difftime(time(NULL), timestar) < 10.00){
     
     digitalWrite (1, HIGH) ;delay(500);
+	if (digitalRead(3) == 0){
+	toalarmoff();  
+
+}
+
     digitalWrite (2, HIGH) ;delay(500);
-    digitalWrite (1,  LOW) ;delay(500);
-    digitalWrite (2,  LOW) ;delay(500);
-    
     if ((digitalRead(3) == 0)) {
       toalarmoff();
     }
+    digitalWrite (1,  LOW) ;delay(500);
+	if (digitalRead(3) == 0){
+	toalarmoff();  
+
+}
+
+    digitalWrite (2,  LOW) ;delay(500);
+	if (digitalRead(3) == 0){
+	toalarmoff();  
+
+}
+    
   }
   toalarmsounding();
 }
 
 void toalarmsounding(){
+	ifttt("https://maker.ifttt.com/trigger/alarm_triggered/with/key/dcZuaJf3oHEAyHhu-55bJE", "my1", "my 2", "my 33333");
+
   while(1){
-    if(digitalRead(3) == 0){
-      toalarmoff();
-    }
     digitalWrite (1, HIGH) ;
+	if (digitalRead(3) == 0){
+	toalarmoff();  
+
+}
     digitalWrite (2, HIGH) ;
     digitalWrite (4, HIGH) ;
-    ifttt("https://maker.ifttt.com/trigger/alarm_triggered/with/key/dcZuaJf3oHEAyHhu-55bJE", "my1", "my 2", "my 33333");
-    delay(2000);
     digitalWrite (1, LOW) ;
     digitalWrite (2, LOW) ;
     digitalWrite (4, LOW) ;
-    
   }
-  
 }
