@@ -29,36 +29,62 @@ void toalarmoff(){
   digitalWrite (1, HIGH) ;
   digitalWrite (2,  LOW) ;
   digitalWrite (4,  LOW) ;
-  delay(3000);
+  delay(2000);
   while (digitalRead(3) == 1);
   toalarming();
 }
 
 void toalarming(){
   time_t timestar;
+	time_t t0;
   timestar = time(NULL);
+	delay(1000);
   while(difftime(time(NULL), timestar) < 10.00 ){
+	while(1){
+	t0 = time(NULL);
+	while(difftime(time(NULL), t0) < 0.50 && digitalRead(3) == 1){
   
-    digitalWrite (1, HIGH) ; delay (500) ;
-	if (digitalRead(3) == 0){
+	digitalWrite (1, HIGH) ;
+	}
+	while (digitalRead(3) == 0){
 	toalarmoff();  
-
+	return;
 }
+	
+        t0 = time(NULL);
+        while(difftime(time(NULL), t0) < 0.50 && digitalRead(3) == 1){
 
-    digitalWrite (1,  LOW) ; delay (500) ;
-    if(digitalRead(3) == 0){
+	digitalWrite (1,  LOW) ;
+	}
+    while(digitalRead(3) == 0){
       toalarmoff();
+	return;
     }
     }
-    digitalWrite (2, HIGH) ;
-	if (digitalRead(3) == 0){
+	t0 = time(NULL);
+        while(difftime(time(NULL), t0) < 0.50 && digitalRead(3) == 1){
+
+
+		digitalWrite (2, HIGH) ;
+	}
+	while (digitalRead(3) == 0){
 	toalarmoff();  
+	return;
+	}
 
+	t0 = time(NULL);
+        while(difftime(time(NULL), t0) < 0.50 && digitalRead(3) == 1){
+
+		digitalWrite (1,  LOW) ;
+	}
+	while (digitalRead(3) == 0){
+        toalarmoff();  
+        return;
+        }
+}
+toalarmed();
 }
 
-    digitalWrite (1,  LOW) ;
-  toalarmed();
-}
 void toalarmed() {
   while (digitalRead(3) == 1){
     while(digitalRead(0) == 0 && digitalRead(3));
@@ -73,48 +99,78 @@ void toalarmed() {
 
 void totriggered(){
   time_t timestar;
+time_t t0;
   timestar = time(NULL);
   while(difftime(time(NULL), timestar) < 10.00){
-    
-    digitalWrite (1, HIGH) ;delay(500);
-	if (digitalRead(3) == 0){
-	toalarmoff();  
+t0 = time(NULL);
+while(difftime(time(NULL), t0) < 0.50 && digitalRead(3) == 1){
 
-}
+                digitalWrite (1,  HIGH) ;
+        }
+        while (digitalRead(3) == 0){
+        toalarmoff();  
+        return;
+        }
+t0 = time(NULL);
 
-    digitalWrite (2, HIGH) ;delay(500);
-    if ((digitalRead(3) == 0)) {
-      toalarmoff();
-    }
-    digitalWrite (1,  LOW) ;delay(500);
-	if (digitalRead(3) == 0){
-	toalarmoff();  
+while(difftime(time(NULL), t0) < 0.50 && digitalRead(3) == 1){
 
-}
+                digitalWrite (2,  HIGH) ;
+        }
+        while (digitalRead(3) == 0){
+        toalarmoff();  
+        return;
+        }
+t0 = time(NULL); 
+while(difftime(time(NULL), t0) < 0.50 && digitalRead(3) == 1){
 
-    digitalWrite (2,  LOW) ;delay(500);
-	if (digitalRead(3) == 0){
-	toalarmoff();  
+                digitalWrite (1,  LOW) ;
+        }
+        while (digitalRead(3) == 0){
+        toalarmoff();  
+        return;
+        }
 
-}
+t0 = time(NULL); 
+while(difftime(time(NULL), t0) < 0.50 && digitalRead(3) == 1){
+
+                digitalWrite (2,  LOW) ;
+        }
+        while (digitalRead(3) == 0){
+        toalarmoff();  
+        return;
+        }
+
     
   }
   toalarmsounding();
 }
 
 void toalarmsounding(){
+	time_t timestar;
 	ifttt("https://maker.ifttt.com/trigger/alarm_triggered/with/key/dcZuaJf3oHEAyHhu-55bJE", "my1", "my 2", "my 33333");
-
-  while(1){
+	while(1){
+  timestar = time(NULL);
+  while(difftime(time(NULL), timestar) <= 2 && digitalRead(3) == 1){
     digitalWrite (1, HIGH) ;
-	if (digitalRead(3) == 0){
-	toalarmoff();  
-
-}
     digitalWrite (2, HIGH) ;
     digitalWrite (4, HIGH) ;
+}
+  while(digitalRead(3) == 0){
+	toalarmoff();  
+	return;
+}
+	
+  timestar = time(NULL);
+  while(difftime(time(NULL), timestar) <= 2 && digitalRead(3) == 1){
     digitalWrite (1, LOW) ;
     digitalWrite (2, LOW) ;
     digitalWrite (4, LOW) ;
   }
+	  while(digitalRead(3) == 0){
+	toalarmoff();  
+	return;
+	}
+	}
+
 }
